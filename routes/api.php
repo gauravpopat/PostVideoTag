@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,7 +25,7 @@ Route::controller(PostController::class)->prefix('post')->group(function(){
     Route::get('list/{id}','list');
     Route::post('create','create');
     Route::post('tag','tag');
-    Route::post('update','update');
+    Route::post('update/{id}','update');
     Route::get('delete/{id}','delete');
 });
 
@@ -32,6 +33,12 @@ Route::controller(VideoController::class)->prefix('video')->group(function(){
     Route::get('list/{id}','list');
     Route::post('create','create');
     Route::post('tag','tag');
-    Route::post('update','update');
+    Route::post('update/{id}','update');
+    Route::get('delete/{id}','delete');
+});
+
+Route::controller(TagController::class)->prefix('tag')->group(function(){
+    Route::get('list/{id}','list');
+    Route::post('update/{id}','update');
     Route::get('delete/{id}','delete');
 });
