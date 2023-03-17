@@ -31,17 +31,16 @@ class PostController extends Controller
         return $this->returnResponse(true,'Post Created Successfully',$post);
     }
 
-    public function update(Request $request)
+    public function update($id,Request $request)
     {
         $validation = Validator::make($request->all(),[
-            'id'    => 'required|exists:posts,id',
             'name'  => 'max:40',
         ]);
 
         if($validation->fails())
             return $this->returnResponse(false,'Validation Error',$validation->errors());
 
-        $post = Post::where('id',$request->id)->first();
+        $post = Post::findOrFail($id);
         if($request->name){
             $post->update([
                 'name'  => $request->name

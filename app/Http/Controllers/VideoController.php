@@ -31,18 +31,17 @@ class VideoController extends Controller
         return $this->returnResponse(true,'Video Created Successfully',$video);
     }
 
-    public function update(Request $request)
+    public function update($id,Request $request)
     {
         $validation = Validator::make($request->all(),[
-            'id'    => 'required|exists:videos,id',
             'name'  => 'max:40',
         ]);
 
         if($validation->fails())
             return $this->returnResponse(false,'Validation Error',$validation->errors());
 
-        $video = Video::where('id',$request->id)->first();
         if($request->name){
+            $video = Video::findOrFail($id);
             $video->update([
                 'name'  => $request->name
             ]);
