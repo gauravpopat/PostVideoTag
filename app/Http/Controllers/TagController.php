@@ -13,24 +13,24 @@ class TagController extends Controller
     public function list($id)
     {
         $tag = Tag::findOrFail($id);
-        return $tag;
+        return ok('Post', $tag);
     }
 
-    public function update($id,Request $request)
+    public function update($id, Request $request)
     {
-        $validation = Validator::make($request->all(),[
+        $validation = Validator::make($request->all(), [
             'name'  => 'max:40'
         ]);
 
-        if($validation->fails())
-            return $this->returnResponse(false,'Validation Error',$validation->errors());
+        if ($validation->fails())
+            return error('Validation Error', $validation->errors(), 'validation');
 
-        if($request->name){
+        if ($request->name) {
             $tag = Tag::findOrFail($id);
             $tag->update([
                 'name'  => $request->name
             ]);
-            return $this->returnResponse(true,'Tag updated successfully');
+            return ok('Tag Updated Successfully');
         }
     }
 
@@ -38,7 +38,6 @@ class TagController extends Controller
     {
         $tag = Tag::findOrFail($id);
         $tag->delete();
-
-        return $this->returnResponse(true,'Tag deleted successfully');
+        return ok('Tag Deleted Successfully');
     }
 }

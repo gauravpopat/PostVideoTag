@@ -15,7 +15,7 @@ class VideoController extends Controller
     public function list($id)
     {
         $video = Video::with('tags')->findOrFail($id);
-        return $this->returnResponse(true,'Video',$video);
+        return ok('Video',$video);
     }
 
     public function create(Request $request)
@@ -25,10 +25,10 @@ class VideoController extends Controller
         ]);
 
         if($validation->fails())
-            return $this->returnResponse(false,'Validation Error',$validation->errors());
+            return error('Validation Error',$validation->errors(),'validation');
 
         $video = Video::create($request->only(['name']));
-        return $this->returnResponse(true,'Video Created Successfully',$video);
+        return ok('Video Added Successfully',$video);
     }
 
     public function update($id,Request $request)
@@ -38,21 +38,21 @@ class VideoController extends Controller
         ]);
 
         if($validation->fails())
-            return $this->returnResponse(false,'Validation Error',$validation->errors());
+            return error('Validation Error',$validation->errors(),'validation');
 
         if($request->name){
             $video = Video::findOrFail($id);
             $video->update([
                 'name'  => $request->name
             ]);
-            return $this->returnResponse(true,'Video Name Updated Successfully');
+            return ok('Video name updated successfully');
         }
     }
 
     public function delete($id)
     {
         Video::findOrFail($id)->delete();
-        return $this->returnResponse(true,'Video Deleted Successfully');
+        return ok('Video deleted successfully');
     }
 
     public function tag(Request $request)
@@ -63,13 +63,13 @@ class VideoController extends Controller
         ]);
 
         if($validation->fails())
-            return $this->returnResponse(false,'Validation Error',$validation->errors());
+            return error('Validation Error',$validation->errors(),'validation');
 
         $video = Video::find($request->video_id);
         $tag = new Tag;
         $tag->name = $request->name;
         $video->tags()->save($tag);
-
-        return $this->returnResponse(true,'tag Added',$tag);
+        
+        return ok('Tag added successfully',$tag);
     }
 }
