@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
 
 class DBTransaction
@@ -14,14 +13,14 @@ class DBTransaction
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
         DB::beginTransaction();
         try {
             $response = $next($request);
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             DB::rollBack();
-            throw $th;
+            throw $e;
         }
 
         if ($response->getStatusCode() > 399) {
@@ -30,6 +29,6 @@ class DBTransaction
             DB::commit();
         }
 
-        return $next($request);
+        return $response;
     }
 }
